@@ -8,14 +8,12 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default function AppsRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body>
-        <main>{children}</main>
-      </body>
-    </html>
+    <div className="flex h-screen flex-col bg-black">
+      <main>{children}</main>
+    </div>
   );
 }

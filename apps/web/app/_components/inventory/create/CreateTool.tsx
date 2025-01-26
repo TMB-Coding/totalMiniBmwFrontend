@@ -43,7 +43,7 @@ const CreateTool = () => {
 
   const handleCreateTool = async () => {
     try {
-      const req = await fetch("http://localhost:8080/tool/", {
+      const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/tool/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,13 +95,16 @@ const CreateTool = () => {
         formData.append("image", imageBlob);
         formData.append("toolId", res.id);
 
-        const req2 = await fetch("http://localhost:8080/s3/upload/image", {
-          method: "POST",
-          body: formData,
-          headers: {
-            Authorization: `Bearer ${cookies.get("jwt")}`,
-          },
-        });
+        const req2 = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/s3/upload/image`,
+          {
+            method: "POST",
+            body: formData,
+            headers: {
+              Authorization: `Bearer ${cookies.get("jwt")}`,
+            },
+          }
+        );
         const res2 = await req2.json();
         if (req2.status == 200) {
           return toast({

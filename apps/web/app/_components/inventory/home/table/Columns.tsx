@@ -21,13 +21,16 @@ const DeleteTool = ({ id }: { id: string }) => {
   const cookies = useCookies();
   const { toast } = useToast();
   const handleDeletePress = async () => {
-    const req = await fetch(`http://localhost:8080/tool/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${cookies.get("jwt")}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const req = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/tool/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${cookies.get("jwt")}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
     if (req.status == 500) {
       return toast({
         variant: "destructive",

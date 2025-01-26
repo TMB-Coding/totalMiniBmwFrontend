@@ -34,14 +34,17 @@ export function AddUser({ refetch }: AddUserProps) {
       });
     }
 
-    const req = await fetch("http://localhost:8080/authority/", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + cookies.get("jwt"),
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: email, authority: "INVENTORY" }),
-    });
+    const req = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/authority/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + cookies.get("jwt"),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email, authority: "INVENTORY" }),
+      }
+    );
 
     const res = await req.json();
     if (req.status == 400) {

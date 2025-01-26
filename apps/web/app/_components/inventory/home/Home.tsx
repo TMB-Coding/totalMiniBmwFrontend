@@ -31,7 +31,7 @@ const InventoryHome = () => {
   useEffect(() => {
     async function queryTools() {
       setError(null);
-      const req = await fetch("http://localhost:8080/tool/", {
+      const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/tool/`, {
         method: "GET",
         headers: { Authorization: "Bearer " + cookies.get("jwt") },
       });

@@ -16,7 +16,7 @@ const AccessControl = () => {
 
   const fetchUsers = async () => {
     const req = await fetch(
-      "http://localhost:8080/authority/retrieve/INVENTORY",
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/authority/retrieve/INVENTORY`,
       {
         method: "GET",
         headers: { Authorization: "Bearer " + cookies.get("jwt") },

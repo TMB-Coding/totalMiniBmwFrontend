@@ -16,7 +16,7 @@ const UserRow = ({ user, refetch }: UserRowProps) => {
 
   const revokeAuthorityCall = async () => {
     const req = await fetch(
-      `http://localhost:8080/authority/revoke/${user.id}`,
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/authority/revoke/${user.id}`,
       {
         method: "DELETE",
         headers: {

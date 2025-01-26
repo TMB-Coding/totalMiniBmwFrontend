@@ -67,13 +67,16 @@ const EditTool = () => {
 
   useEffect(() => {
     const queryToolData = async () => {
-      const req = await fetch(`http://localhost:8080/tool/${toolId}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${cookies.get("jwt")}`,
-        },
-      });
+      const req = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/tool/${toolId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${cookies.get("jwt")}`,
+          },
+        }
+      );
       const data = await req.json();
       setPlaceholderName(data.name);
       setPlaceholderCondition(data.condition.toLowerCase());
@@ -90,30 +93,33 @@ const EditTool = () => {
 
   const handleToolEdit = async () => {
     try {
-      const req = await fetch(`http://localhost:8080/tool/${toolId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${cookies.get("jwt")}`,
-        },
-        body: JSON.stringify({
-          name: !newName ? placeholderName : newName,
-          condition: !newCondition
-            ? placeholderCondition.toUpperCase()
-            : newCondition.toUpperCase(),
-          cabinet: !newCabinet ? placeholderCabinet : newCabinet,
-          bmwGroup: !newBmwGroup ? placeholderBmwGroup : newBmwGroup,
-          bmwSubGroup: !newBmwSubGroup
-            ? placeholderBmwSubGroup
-            : newBmwSubGroup,
-          chassis: !newChassis ? placeholderChassis : newChassis,
-          description: !newDescription
-            ? placeholderDescription
-            : newDescription,
-          location: !newLocation ? placeholderLocation : newLocation,
-          toolBoard: !newToolBoard ? placeholderToolBoard : newToolBoard,
-        }),
-      });
+      const req = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/tool/${toolId}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${cookies.get("jwt")}`,
+          },
+          body: JSON.stringify({
+            name: !newName ? placeholderName : newName,
+            condition: !newCondition
+              ? placeholderCondition.toUpperCase()
+              : newCondition.toUpperCase(),
+            cabinet: placeholderCabinet,
+            bmwGroup: !newBmwGroup ? placeholderBmwGroup : newBmwGroup,
+            bmwSubGroup: !newBmwSubGroup
+              ? placeholderBmwSubGroup
+              : newBmwSubGroup,
+            chassis: !newChassis ? placeholderChassis : newChassis,
+            description: !newDescription
+              ? placeholderDescription
+              : newDescription,
+            location: !newLocation ? placeholderLocation : newLocation,
+            toolBoard: !newToolBoard ? placeholderToolBoard : newToolBoard,
+          }),
+        }
+      );
       const res: ApiErrorResponse = await req.json();
       if (req.status == 400) {
         return toast({
@@ -149,13 +155,16 @@ const EditTool = () => {
         formData.append("image", imageBlob);
         formData.append("toolId", toolId!);
 
-        const req2 = await fetch("http://localhost:8080/s3/upload/image", {
-          method: "POST",
-          body: formData,
-          headers: {
-            Authorization: `Bearer ${cookies.get("jwt")}`,
-          },
-        });
+        const req2 = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/s3/upload/image`,
+          {
+            method: "POST",
+            body: formData,
+            headers: {
+              Authorization: `Bearer ${cookies.get("jwt")}`,
+            },
+          }
+        );
         await req2.json();
         if (req2.status == 200) {
           return toast({

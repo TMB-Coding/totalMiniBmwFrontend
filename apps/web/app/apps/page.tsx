@@ -28,7 +28,7 @@ const apps: Array<App> = [
 
 const AppsSelect = () => {
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center bg-black">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center bg-black">
       <h1 className="mx-auto my-1 items-center text-2xl font-semibold text-white">
         Total Mini & BMW
       </h1>

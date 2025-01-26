@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const InventorySidebar = () => {
   return (
-    <div className="h-screen flex flex-col text-white">
+    <div className="min-h-screen flex flex-col text-white">
       <div className="flex flex-col border-2 border-primary m-2 h-full rounded-xl ">
         <div className="p-4 text-2xl space-y-2">
           <div className="flex flex-row">

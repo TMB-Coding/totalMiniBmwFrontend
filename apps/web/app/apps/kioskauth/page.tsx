@@ -38,7 +38,7 @@ const KioskLoginPage = () => {
   }
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
+    <div className="flex min-h-screen flex-col items-center justify-center">
       <div className="rounded-lg px-3 py-4 text-white shadow-small">
         <div className="flex flex-row py-5">
           <h1 className="text-4xl font-semibold text-white">Sign into&nbsp;</h1>

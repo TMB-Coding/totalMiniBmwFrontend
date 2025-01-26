@@ -1,30 +1,52 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-//import { verifyAuth0Jwt } from "./lib/auth0";
-//import { verifyInHouseSession } from "./lib/inHouseAuth";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  // If matched /apps/:path*, do Auth0 check
-  const url = request.nextUrl.clone();
+  const jwt = request.cookies.get("jwt")?.value; // Extract the JWT from cookies
+  const { pathname } = request.nextUrl; // Get the request pathname
 
-  // If the user is at the root (no pathname)
-  if (url.pathname === "/") {
-    // Redirect to /apps
-    url.pathname = "/apps";
-    return NextResponse.redirect(url);
+  // Define public paths
+  const publicPaths = ["/apps/auth", "/apps/kiosk"];
+
+  // Check if the path starts with any public path
+  const isPublicPath = publicPaths.some((path) => pathname.startsWith(path));
+
+  // Allow public paths
+  if (isPublicPath) {
+    return NextResponse.next();
   }
 
-  if (url.pathname === "/kiosk") {
-    url.pathname = "/apps/kioskauth";
-    return NextResponse.redirect(url);
+  // Require authentication for all other /apps/... routes
+  if (pathname.startsWith("/apps") && !jwt) {
+    // Redirect to /apps/auth if not authenticated
+    return NextResponse.redirect(new URL("/apps/auth", request.url));
   }
 
-  // Otherwise, continue
-  return NextResponse.next();
+  if (pathname.startsWith("/apps")) {
+    try {
+      // Verify the JWT
+      const req = await fetch("http://localhost:8080/auth/validate", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `${jwt}`,
+        },
+      });
+      const code = req.status;
+      if (code != 200) {
+        return NextResponse.redirect(new URL("/apps/auth", request.url));
+      }
+      return NextResponse.next();
+    } catch (error) {
+      console.error("Invalid or expired JWT:", error);
+      // Redirect to /apps/auth if token verification fails
+      return NextResponse.redirect(new URL("/apps/auth", request.url));
+    }
+  }
+
+  // Allow the request to proceed for authenticated users
 }
 
-// If matched /kiosk/:path*, do in-house check
-
+// Specify the matcher to apply middleware to specific routes
 export const config = {
-  matcher: ["/apps/:path*", "/kiosk/:path*", "/"],
+  matcher: ["/apps/:path*"], // Middleware applies to all /apps/... routes
 };

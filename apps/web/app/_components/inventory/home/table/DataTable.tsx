@@ -41,6 +41,12 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    initialState: {
+      // show 8 rows per table view
+      pagination: {
+        pageSize: 8,
+      },
+    },
   });
 
   useEffect(() => {
@@ -108,10 +114,10 @@ export function DataTable<TData, TValue>({
                 </TableRow>
               ))
             ) : (
-              <TableRow>
+              <TableRow className="hover:bg-black">
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center hover:bg-black text-white"
                 >
                   No results.
                 </TableCell>

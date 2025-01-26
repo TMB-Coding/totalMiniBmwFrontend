@@ -7,6 +7,12 @@ const nextConfig = {
         hostname: "cdn.dribbble.com",
         pathname: "/userupload/**",
       },
+
+      {
+        protocol: "https",
+        hostname: "tmb-inventory.s3.us-east-2.amazonaws.com",
+        pathname: "/**",
+      },
     ],
   },
 };

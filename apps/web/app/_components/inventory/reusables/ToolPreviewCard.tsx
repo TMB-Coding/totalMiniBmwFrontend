@@ -1,4 +1,5 @@
 import { Button } from "@repo/ui/components/button";
+import { Skeleton } from "@repo/ui/components/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -7,27 +8,79 @@ import {
 } from "@repo/ui/components/tooltip";
 import { CarIcon, PinIcon } from "lucide-react";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
-const ToolPreviewCard = () => {
+interface ToolPreviewCardProps {
+  name: string;
+  toolBoard: string;
+  imageUrl: string | null;
+  lsrFileName: string | null;
+  chassis: string;
+  bmwSubGroup: number | undefined;
+  bmwGroup: number | undefined;
+  description: string;
+  location: string;
+  cabinet: string;
+}
+
+const ToolPreviewCard = ({
+  name,
+  toolBoard,
+  imageUrl,
+  chassis,
+  bmwGroup,
+  bmwSubGroup,
+  description,
+  location,
+  cabinet,
+  lsrFileName,
+}: ToolPreviewCardProps) => {
+  async function isImageLoadable() {
+    if (!imageUrl) return false;
+    try {
+      const response = await fetch(
+        "https://tmb-inventory.s3.us-east-2.amazonaws.com/195321f9-bbf4-45de-b0e4-432f5bf7ca39",
+        {
+          headers: { "User-Agent": "Mozilla/5.0 (Node.js App)" },
+        }
+      );
+      if (response) {
+        console.log(response);
+        return true;
+      }
+    } catch (error) {
+      return false;
+    }
+  }
+
   return (
-    <div className="flex flex-col gap-2 ml-auto right-0 border-[1px] border-primary rounded-lg mb-5 min-w-[240px] max-w-[240px] h-min">
-      <div className=" flex flex-col">
+    <div className="flex flex-col gap-2 ml-auto right-0 border-[1px] border-primary rounded-lg mb-5 min-w-[240px] max-w-[240px] flex-grow">
+      <div className=" flex flex-col h-">
         <div className="text-white py-2 rounded-t-md px-3 py-3 bg-black">
-          <Image
-            className="rounded-md"
-            width={300}
-            height={170}
-            src={
-              "https://cdn.dribbble.com/userupload/4359856/file/original-540b3e4719e48c60340996f01deabb67.png?resize=752x&vertical=center"
-            }
-            alt="Preview Image"
-          />
+          {!imageUrl || !isImageLoadable() ? (
+            <Skeleton className="h-[170px] rounded-xl bg-gray-800" />
+          ) : (
+            <Image
+              className="rounded-md"
+              width={300}
+              height={170}
+              src={imageUrl}
+              alt="Preview Image"
+            />
+          )}
         </div>
         <div className="flex flex-col px-3">
           <div className="flex flex-row w-full  mt-4">
-            <h1 className="text-white text-sm font-light mr-12">TB-12</h1>
-            <div className="flex ml-auto right-0">
+            {!toolBoard ? (
+              <div className="space-y-2 items-center">
+                <Skeleton className="h-4 w-[70px] bg-gray-800" />
+              </div>
+            ) : (
+              <h1 className="text-white text-sm font-light mr-12">
+                TB-{toolBoard}
+              </h1>
+            )}
+            {/* <div className="flex ml-auto right-0">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger>
@@ -40,50 +93,92 @@ const ToolPreviewCard = () => {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-            </div>
+            </div> */}
           </div>
           <div className="flex flex-col h-full">
-            <h1 className="text-xl font-semibold mt-3">Piston Ring Remover</h1>
-            <div className="flex flex-row mt-2 items-center">
-              <div className="flex flex-col gap-1">
-                <h1 className="text-xs text-white/30 font-normal">Chassis</h1>
-                <div className="flex items-center flex-row gap-2">
-                  <CarIcon size={20} />
-                  <h1 className="text-xs text-white">E89</h1>
-                </div>
+            {!name ? (
+              <div className="space-y-2 items-center">
+                <Skeleton className="h-4  bg-gray-800 mt-3" />
+                <Skeleton className="h-4 w-[100px] bg-gray-800" />
               </div>
-              <div className="flex flex-col gap-1 ml-auto right-0">
-                <h1 className="text-xs text-white/30 font-normal">Group</h1>
-                <div className="flex items-center flex-row">
-                  <h1 className="text-xs text-white">21-11</h1>
+            ) : (
+              <h1 className="text-xl font-semibold mt-3">{name}</h1>
+            )}
+            <div className="flex flex-row mt-2 items-center">
+              {!chassis ? (
+                <Skeleton className="h-4 w-[70px] bg-gray-800" />
+              ) : (
+                <div className="flex flex-col gap-1">
+                  <h1 className="text-xs text-white/30 font-normal">Chassis</h1>
+                  <div className="flex items-center flex-row gap-2">
+                    <CarIcon size={20} />
+                    <h1 className="text-xs text-white">{chassis}</h1>
+                  </div>
                 </div>
+              )}
+              <div className="flex flex-col gap-1 ml-auto right-0">
+                {!bmwGroup || !bmwSubGroup ? (
+                  <Skeleton className="h-4 w-[70px] bg-gray-800" />
+                ) : (
+                  <>
+                    <h1 className="text-xs text-white/30 font-normal">Group</h1>
+                    <div className="flex items-center flex-row">
+                      <h1 className="text-xs text-white">
+                        {bmwGroup}-{bmwSubGroup}
+                      </h1>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
             <hr className="bg-primary border-0  h-px my-4 rounded-xl" />
             <div className="flex flex-col gap-2 h-full">
-              <h1 className="text-xs text-white/30 font-normal">Description</h1>
-              <h1 className="text-xs text-white/40 font-normal">
-                This is a cool description of a very cool bmw specific tool used
-                for all sorts of things like coolant pressure testing and such
-              </h1>
-              <Button>
-                <h1 className="text-xs font-medium">...ngRemover.dxf</h1>
-              </Button>
-              <div className="flex flex-row items-center mt-auto bottom-0 mb-3">
-                <div className="flex flex-col gap-1">
+              {!description ? (
+                <Skeleton className="h-[100px] rounded-xl bg-gray-800" />
+              ) : (
+                <>
                   <h1 className="text-xs text-white/30 font-normal">
-                    Location
+                    Description
                   </h1>
-                  <div className="flex items-center flex-row gap-1">
-                    <PinIcon size={20} />
-                    <h1 className="text-xs text-white">Tool Room</h1>
+                  <h1 className="text-xs text-white/40 font-normal">
+                    {description}
+                  </h1>
+                </>
+              )}
+              {!lsrFileName ? (
+                <Skeleton className="h-[35px] rounded-xl bg-gray-800" />
+              ) : (
+                <Button>
+                  <h1 className="text-xs font-medium">{lsrFileName}</h1>
+                </Button>
+              )}
+              <div className="flex flex-row items-center mt-auto bottom-0 mb-3">
+                {!location ? (
+                  <Skeleton className="h-4 w-[70px] bg-gray-800" />
+                ) : (
+                  <div className="flex flex-col gap-1">
+                    <h1 className="text-xs text-white/30 font-normal">
+                      Location
+                    </h1>
+                    <div className="flex items-center flex-row gap-1">
+                      <PinIcon size={20} />
+                      <h1 className="text-xs text-white">{location}</h1>
+                    </div>
                   </div>
-                </div>
+                )}
                 <div className="flex flex-col gap-1 ml-auto right-0">
-                  <h1 className="text-xs text-white/30 font-normal">Cabinet</h1>
-                  <div className="flex items-center flex-row">
-                    <h1 className="text-xs text-white">Cab1</h1>
-                  </div>
+                  {!cabinet ? (
+                    <Skeleton className="h-4 w-[70px] bg-gray-800" />
+                  ) : (
+                    <>
+                      <h1 className="text-xs text-white/30 font-normal">
+                        Cabinet
+                      </h1>
+                      <div className="flex items-center flex-row">
+                        <h1 className="text-xs text-white">{cabinet}</h1>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

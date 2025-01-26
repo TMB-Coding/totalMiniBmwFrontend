@@ -3,6 +3,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import Home from "../../../_components/inventory/home/Home";
 import CreateTool from "../../../_components/inventory/create/CreateTool";
+import AccessControl from "../../../_components/inventory/access_control/AccessControl";
+import EditTool from "../../../_components/inventory/edit/EditTool";
 
 const Inventory = () => {
   const router = useRouter();
@@ -14,18 +16,17 @@ const Inventory = () => {
   }, []);
 
   return (
-    <div className="flex h-screen w-full flex-col">
+    <div className="flex h-full w-full flex-col">
       {view && view == "home" && <Home />}
 
       {view && view == "mass_edits" && (
         <div className="text-white">Mass Edit</div>
       )}
 
-      {view && view == "access_control" && (
-        <div className="text-white">Access Control</div>
-      )}
+      {view && view == "access_control" && <AccessControl />}
 
       {view && view == "create" && <CreateTool />}
+      {view && view == "edit" && <EditTool />}
     </div>
   );
 };

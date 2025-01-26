@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,6 +15,9 @@ import {
 } from "@repo/ui/components/form";
 import { Input } from "@repo/ui/components/input";
 import { Button } from "@repo/ui/components/button";
+import { useCookies } from "next-client-cookies";
+import { useRouter } from "next/navigation";
+import { useToast } from "@repo/ui/hooks/use-toast";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -26,6 +29,9 @@ const formSchema = z.object({
 });
 const LoginPage = () => {
   const [waiting, setWaiting] = useState<boolean>(false);
+  const cookies = useCookies();
+  const router = useRouter();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,13 +41,37 @@ const LoginPage = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  useEffect(() => {
+    if (cookies.get("jwt")) {
+      router.push("/apps");
+    }
+  }, []);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     setWaiting(true);
-    console.log(values);
+    const req = await fetch("http://localhost:8080/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    });
+    const res = await req.json();
+    setWaiting(false);
+
+    if (req.status != 200) {
+      return toast({
+        variant: "destructive",
+        title: res.title,
+        description: res.detail,
+      });
+    }
+    cookies.set("jwt", res.token);
+    window.location.reload();
   }
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
+    <div className="flex min-h-screen flex-col items-center justify-center">
       <div className="rounded-lg px-3 py-4 text-white shadow-small">
         <div className="flex flex-row py-5">
           <h1 className="text-4xl font-semibold text-white">Sign onto&nbsp;</h1>

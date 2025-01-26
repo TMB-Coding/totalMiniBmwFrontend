@@ -1,5 +1,13 @@
-import { User } from "@repo/db";
+"use client";
 
-export default async function Home() {
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+export default function Home() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/apps/auth");
+  }, []);
   return <div></div>;
 }

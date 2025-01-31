@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -15,9 +15,12 @@ import {
 } from "@repo/ui/components/form";
 import { Input } from "@repo/ui/components/input";
 import { Button } from "@repo/ui/components/button";
+import { useCookies } from "next-client-cookies";
+import { useToast } from "@repo/ui/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  employeeNumber: z.number().min(4, {
+  employeeNumber: z.string().min(4, {
     message: "Input must be an employee number.",
   }),
   firstName: z.string().min(1, {
@@ -25,16 +28,53 @@ const formSchema = z.object({
   }),
 });
 const KioskLoginPage = () => {
+  const cookies = useCookies();
+  const [waiting, setWaiting] = useState<boolean>(false);
+  const { toast } = useToast();
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      employeeNumber: undefined,
+      employeeNumber: "",
       firstName: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  useEffect(() => {
+    if (cookies.get("jwt")) {
+      window.location.href = "/apps";
+    }
+  }, []);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setWaiting(true);
+    const employeeNumber = parseInt(values.employeeNumber);
+    const req = await fetch(
+      `${process.env.NEXT_PUBLIC_SERVER_URL}/auth/kiosk`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          employeeNumber,
+          name: values.firstName,
+        }),
+      }
+    );
+    const res = await req.json();
+    setWaiting(false);
+
+    if (req.status != 200) {
+      return toast({
+        variant: "destructive",
+        title: "Error:",
+        description: "An error occured logging you into the kiosk.",
+      });
+    }
+    cookies.set("jwt", res.token);
+    router.push("/apps/kiosk");
   }
 
   return (
@@ -77,8 +117,12 @@ const KioskLoginPage = () => {
                 )}
               />
             </div>
-            <Button type="submit" className="relative mt-8 w-full">
-              <Loader2 className="animate-spin" />
+            <Button
+              type="submit"
+              className="relative mt-8 w-full"
+              disabled={waiting}
+            >
+              {waiting && <Loader2 className="animate-spin" />}
               Submit
             </Button>
           </form>

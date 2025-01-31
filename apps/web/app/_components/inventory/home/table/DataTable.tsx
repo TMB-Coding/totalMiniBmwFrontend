@@ -18,7 +18,7 @@ import {
   TableRow,
 } from "@repo/ui/components/table";
 import { Button } from "@repo/ui/components/button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,20 +35,6 @@ export function DataTable<TData, TValue>({
   cabinetFilter,
   searchFilter,
 }: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    initialState: {
-      // show 8 rows per table view
-      pagination: {
-        pageSize: 8,
-      },
-    },
-  });
-
   useEffect(() => {
     if (!conditionFilter) {
       return table.getColumn("condition")?.setFilterValue(undefined);
@@ -69,6 +55,20 @@ export function DataTable<TData, TValue>({
     }
     table.getColumn("name")?.setFilterValue(searchFilter);
   }, [searchFilter]);
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    initialState: {
+      // show 8 rows per table view
+      pagination: {
+        pageSize: 8,
+      },
+    },
+  });
 
   return (
     <div className="mx-10">

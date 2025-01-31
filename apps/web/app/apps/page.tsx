@@ -12,7 +12,7 @@ const apps: Array<App> = [
   {
     name: "kiosk",
     title: "Kiosk",
-    href: "/kiosk",
+    href: "/apps/kiosk",
   },
   {
     name: "inventory",

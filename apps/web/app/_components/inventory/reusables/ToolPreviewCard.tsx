@@ -35,29 +35,11 @@ const ToolPreviewCard = ({
   cabinet,
   lsrFileName,
 }: ToolPreviewCardProps) => {
-  async function isImageLoadable() {
-    if (!imageUrl) return false;
-    try {
-      const response = await fetch(
-        "https://tmb-inventory.s3.us-east-2.amazonaws.com/195321f9-bbf4-45de-b0e4-432f5bf7ca39",
-        {
-          headers: { "User-Agent": "Mozilla/5.0 (Node.js App)" },
-        }
-      );
-      if (response) {
-        console.log(response);
-        return true;
-      }
-    } catch (error) {
-      return false;
-    }
-  }
-
   return (
     <div className="flex flex-col gap-2 ml-auto right-0 border-[1px] border-primary rounded-lg mb-5 min-w-[240px] max-w-[240px] flex-grow">
       <div className=" flex flex-col h-">
         <div className="text-white py-2 rounded-t-md px-3 py-3 bg-black">
-          {!imageUrl || !isImageLoadable() ? (
+          {!imageUrl ? (
             <Skeleton className="h-[170px] rounded-xl bg-gray-800" />
           ) : (
             <Image

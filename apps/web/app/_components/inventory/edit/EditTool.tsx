@@ -64,6 +64,8 @@ const EditTool = () => {
   const [newToolBoard, setNewToolBoard] = useState<string>("");
 
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
+  const [fileBlob, setFileBlob] = useState<Blob | null>(null);
+  const [fileName, setFileName] = useState<string>("");
 
   useEffect(() => {
     const queryToolData = async () => {
@@ -167,17 +169,48 @@ const EditTool = () => {
         );
         await req2.json();
         if (req2.status == 200) {
-          return toast({
+          toast({
             variant: "default",
             title: "Success",
             description: "Tool image uploaded successfully.",
           });
+        } else {
+          toast({
+            variant: "default",
+            title: "destructive",
+            description: "Tool image upload failed.",
+          });
         }
-        return toast({
-          variant: "default",
-          title: "destructive",
-          description: "Tool image upload failed.",
-        });
+      }
+      if (fileBlob) {
+        const formDataLaserFile = new FormData();
+        formDataLaserFile.append("file", fileBlob);
+        formDataLaserFile.append("toolId", toolId!);
+        // tool image upload
+        const req2 = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/s3/upload/laser`,
+          {
+            method: "POST",
+            body: formDataLaserFile,
+            headers: {
+              Authorization: `Bearer ${cookies.get("jwt")}`,
+            },
+          }
+        );
+
+        if (req2.status == 200) {
+          return toast({
+            variant: "default",
+            title: "Success",
+            description: "Tool laser file uploaded successfully.",
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error:",
+            description: "Tool laser file upload failed.",
+          });
+        }
       }
     } catch (error) {
       console.log(error);
@@ -225,6 +258,10 @@ const EditTool = () => {
             <div className="inline-block h-full mx-12 w-0.5 bg-primary"></div>
             <div className="flex flex-row gap-3">
               <ImageUpload setImageBlob={setImageBlob} />
+              <LaserFileUpload
+                setFileBlob={setFileBlob}
+                setFileName={setFileName}
+              />
             </div>
           </div>
           <hr className="bg-primary border-0  h-px rounded-xl mb-6" />
@@ -271,10 +308,10 @@ const EditTool = () => {
               name={!newName ? placeholderName : newName}
               imageUrl={
                 !imageBlob
-                  ? `https://tmb-inventory.s3.us-east-2.amazonaws.com/${toolId}`
+                  ? `${process.env.NEXT_PUBLIC_S3_URL}/${toolId}`
                   : URL.createObjectURL(imageBlob)
               }
-              lsrFileName={"Laser Files not Supported."}
+              lsrFileName={fileName}
               description={
                 !newDescription ? placeholderDescription : newDescription
               }

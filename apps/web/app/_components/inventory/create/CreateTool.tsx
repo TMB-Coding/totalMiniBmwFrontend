@@ -18,6 +18,7 @@ import ImageUpload from "./create_tool/ImageUpload";
 import { useCookies } from "next-client-cookies";
 import { useToast } from "@repo/ui/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import LaserFileUpload from "./create_tool/LaserFileUpload";
 
 interface ErrorObj {
   field: string;
@@ -40,6 +41,9 @@ const CreateTool = () => {
   const [toolBoard, setToolBoard] = useState<string>("");
 
   const [imageBlob, setImageBlob] = useState<Blob | null>(null);
+
+  const [laserFileBlob, setLaserFileBlob] = useState<Blob | null>(null);
+  const [laserFileName, setLaserFileName] = useState<string>("");
 
   const handleCreateTool = async () => {
     try {
@@ -90,34 +94,69 @@ const CreateTool = () => {
         description:
           "Tool created successfully. If files we're uploaded, they are pending upload and you will be notified..",
       });
-      if (imageBlob) {
-        const formData = new FormData();
-        formData.append("image", imageBlob);
-        formData.append("toolId", res.id);
 
+      // image upload
+      if (imageBlob) {
+        const formDataImage = new FormData();
+        formDataImage.append("image", imageBlob);
+        formDataImage.append("toolId", res.id);
+        // tool image upload
         const req2 = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/s3/upload/image`,
           {
             method: "POST",
-            body: formData,
+            body: formDataImage,
             headers: {
               Authorization: `Bearer ${cookies.get("jwt")}`,
             },
           }
         );
-        const res2 = await req2.json();
+
         if (req2.status == 200) {
-          return toast({
+          toast({
             variant: "default",
             title: "Success",
             description: "Tool image uploaded successfully.",
           });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error:",
+            description: "Tool image upload failed.",
+          });
         }
-        return toast({
-          variant: "default",
-          title: "destructive",
-          description: "Tool image upload failed.",
-        });
+      }
+
+      // laser file upload
+      if (laserFileBlob) {
+        const formDataLaserFile = new FormData();
+        formDataLaserFile.append("file", laserFileBlob);
+        formDataLaserFile.append("toolId", res.id);
+        // tool image upload
+        const req2 = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/s3/upload/laser`,
+          {
+            method: "POST",
+            body: formDataLaserFile,
+            headers: {
+              Authorization: `Bearer ${cookies.get("jwt")}`,
+            },
+          }
+        );
+
+        if (req2.status == 200) {
+          return toast({
+            variant: "default",
+            title: "Success",
+            description: "Tool laser file uploaded successfully.",
+          });
+        } else {
+          toast({
+            variant: "destructive",
+            title: "Error:",
+            description: "Tool laser file upload failed.",
+          });
+        }
       }
     } catch (error) {
       console.log(error);
@@ -162,6 +201,10 @@ const CreateTool = () => {
             <div className="inline-block h-full mx-12 w-0.5 bg-primary"></div>
             <div className="flex flex-row gap-3">
               <ImageUpload setImageBlob={setImageBlob} />
+              <LaserFileUpload
+                setFileName={setLaserFileName}
+                setFileBlob={setLaserFileBlob}
+              />
             </div>
           </div>
           <hr className="bg-primary border-0  h-px rounded-xl mb-6" />
@@ -188,7 +231,7 @@ const CreateTool = () => {
             <ToolPreviewCard
               name={name}
               imageUrl={imageBlob ? URL.createObjectURL(imageBlob) : ""}
-              lsrFileName={"Laser Files not Supported"}
+              lsrFileName={laserFileName}
               description={description}
               chassis={chassis}
               toolBoard={toolBoard}

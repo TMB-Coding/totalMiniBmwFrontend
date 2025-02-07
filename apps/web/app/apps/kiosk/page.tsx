@@ -1,8 +1,9 @@
+import { Input } from "@repo/ui/components/input";
 import React from "react";
 
 const KioskHome = () => {
   return (
-    <div className="flex h-screen p-12">
+    <div className="flex h-screen p-12 flex-row justify-between w-full">
       <div className="flex flex-col">
         <h1 className="text-white text-2xl font-semibold mb-4">
           Welcome to TMB KIOSK
@@ -34,6 +35,12 @@ const KioskHome = () => {
             </span>
           </div>
         </div>
+      </div>
+      <div className="flex flex-row justify-center items-center mx-auto">
+        <Input
+          placeholder={"Input tool barcode"}
+          className="bg-black text-white"
+        />
       </div>
     </div>
   );

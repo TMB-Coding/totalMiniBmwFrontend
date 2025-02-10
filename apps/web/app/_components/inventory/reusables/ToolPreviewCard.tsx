@@ -8,7 +8,7 @@ import {
 } from "@repo/ui/components/tooltip";
 import { CarIcon, PinIcon } from "lucide-react";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 interface ToolPreviewCardProps {
   name: string;
@@ -35,11 +35,40 @@ const ToolPreviewCard = ({
   cabinet,
   lsrFileName,
 }: ToolPreviewCardProps) => {
+  const [previewImageIsAccessable, setPreviewImageIsAccessable] =
+    useState<boolean>(false);
+
+  const [laserFileIsAccessable, setLaserFileIsAccessable] =
+    useState<boolean>(false);
+
+  useEffect(() => {
+    const isImageAccessable = async () => {
+      // if image has been uploaded, dont try and query yet but set
+      // accessable to true;
+      //if (imageUrl?.includes("blob")) return setPreviewImageIsAccessable(true);
+      const response = await fetch(imageUrl as string, {
+        method: "HEAD",
+      });
+
+      setPreviewImageIsAccessable(response.status == 404 ? false : true);
+    };
+    isImageAccessable();
+
+    const isLaserFileAccessable = async () => {
+      // eventually update to support multiple laser files (laser assets).
+      const response = await fetch((imageUrl as string) + "_LASER", {
+        method: "HEAD",
+      });
+
+      setLaserFileIsAccessable(response.status == 404 ? false : true);
+    };
+    isLaserFileAccessable();
+  }, [imageUrl]);
   return (
     <div className="flex flex-col gap-2 ml-auto right-0 border-[1px] border-primary rounded-lg mb-5 min-w-[240px] max-w-[240px] flex-grow">
       <div className=" flex flex-col h-">
         <div className="text-white py-2 rounded-t-md px-3 py-3 bg-black">
-          {!imageUrl ? (
+          {!previewImageIsAccessable || !imageUrl ? (
             <Skeleton className="h-[170px] rounded-xl bg-gray-800" />
           ) : (
             <Image
@@ -127,11 +156,11 @@ const ToolPreviewCard = ({
                   </h1>
                 </>
               )}
-              {!lsrFileName ? (
+              {!laserFileIsAccessable && !lsrFileName ? (
                 <Skeleton className="h-[35px] rounded-xl bg-gray-800" />
               ) : (
                 <Button>
-                  <h1 className="text-xs font-medium">{lsrFileName}</h1>
+                  <h1 className="text-xs font-medium">Laser File Uploaded</h1>
                 </Button>
               )}
               <div className="flex flex-row items-center mt-auto bottom-0 mb-3">

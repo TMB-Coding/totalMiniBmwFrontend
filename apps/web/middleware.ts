@@ -24,7 +24,7 @@ export async function middleware(request: NextRequest) {
   if (pathname.startsWith("/apps")) {
     try {
       // Verify the JWT
-      const req = await fetch("http://localhost:8080/auth/validate", {
+      const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/validate`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

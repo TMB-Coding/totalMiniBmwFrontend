@@ -45,7 +45,7 @@ const ToolPreviewCard = ({
     const isImageAccessable = async () => {
       // if image has been uploaded, dont try and query yet but set
       // accessable to true;
-      //if (imageUrl?.includes("blob")) return setPreviewImageIsAccessable(true);
+      if (imageUrl?.includes("blob")) return setPreviewImageIsAccessable(true);
       const response = await fetch(imageUrl as string, {
         method: "HEAD",
       });
@@ -56,6 +56,9 @@ const ToolPreviewCard = ({
 
     const isLaserFileAccessable = async () => {
       // eventually update to support multiple laser files (laser assets).
+      // if image has been uploaded, dont try and query yet but set
+      // accessable to true;
+      if (imageUrl?.includes("blob")) return setPreviewImageIsAccessable(true);
       const response = await fetch((imageUrl as string) + "_LASER", {
         method: "HEAD",
       });

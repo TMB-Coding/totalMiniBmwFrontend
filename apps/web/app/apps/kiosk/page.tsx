@@ -1,46 +1,29 @@
+"use client";
 import { Input } from "@repo/ui/components/input";
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import KioskHeader from "../../_components/kiosk/KioskHeader";
 
 const KioskHome = () => {
+  const barcodeInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    barcodeInputRef.current?.focus();
+  }, []);
+
   return (
-    <div className="flex h-screen p-12 flex-row justify-between w-full">
-      <div className="flex flex-col">
-        <h1 className="text-white text-2xl font-semibold mb-4">
-          Welcome to TMB KIOSK
-        </h1>
-        <h1 className="text-white/20 text-lg font-medium">
-          Account: Finn Carmichael
-        </h1>
-        <h1 className="text-white/20 text-lg font-medium">
-          Currently Checked Out: 5
-        </h1>
-        <h1 className="text-white text-lg font-medium mt-4 mb-1">Audit Log</h1>
-        <div className="flex flex-col border-[1px] border-primary h-full rounded-xl text-white w-full p-3 flex-grow max-w-4xl">
-          <div className="flex flex-col gap-2">
-            <span className="flex flex-row">
-              <h1 className="text-white/20 font-regular text-md">
-                532991 - THU, JAN 30 @ 3:00PM -&nbsp;
-              </h1>
-              <h1 className="text-white font-medium text-md">
-                Recognized check-out of "Piston Ring Remover"
-              </h1>
-            </span>
-            <span className="flex flex-row">
-              <h1 className="text-white/20 font-regular text-md">
-                532991 - THU, JAN 30 @ 3:21PM -&nbsp;
-              </h1>
-              <h1 className="text-white font-medium text-md">
-                Recognized check-in of "Piston Ring Remover"
-              </h1>
-            </span>
-          </div>
+    <div className="flex h-screen flex-col">
+      <KioskHeader />
+      <div className="flex h-full p-12 flex-row justify-between w-full">
+        <div className="flex flex-col justify-center items-center mx-auto text-2xl gap-5">
+          <h1 className="inline-block bg-gradient-to-r from-[#81C4FF] to-[#E7222E] bg-clip-text font-semibold text-transparent items-center">
+            TMB Kiosk
+          </h1>
+          <Input
+            ref={barcodeInputRef}
+            placeholder={"Scan or input barcode"}
+            className="bg-black text-white"
+          />
         </div>
-      </div>
-      <div className="flex flex-row justify-center items-center mx-auto">
-        <Input
-          placeholder={"Input tool barcode"}
-          className="bg-black text-white"
-        />
       </div>
     </div>
   );

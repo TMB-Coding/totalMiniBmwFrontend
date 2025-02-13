@@ -12,6 +12,7 @@ interface Tool {
   comments: Array<string>;
   barcode: number;
   toolBoard: string;
+  user?: { firstName: string; lastName: string };
 }
 
 export { type Tool };

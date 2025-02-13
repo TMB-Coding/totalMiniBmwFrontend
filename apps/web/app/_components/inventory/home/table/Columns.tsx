@@ -71,6 +71,14 @@ export const columns: ColumnDef<Tool>[] = [
     header: "Condition",
   },
   {
+    accessorKey: "user.firstName",
+    header: "Checked Out:",
+    cell: ({ row }) => {
+      const user = row.original.user;
+      return user ? `${user.firstName} ${user.lastName}`.trim() : "N/A";
+    },
+  },
+  {
     accessorKey: "cabinet",
     header: "Cabinet",
   },

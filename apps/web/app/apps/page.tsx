@@ -24,6 +24,11 @@ const apps: Array<App> = [
     title: "Payroll Portal",
     href: "/apps/app/payroll_portal",
   },
+  {
+    name: "user_mgmt",
+    title: "User Management",
+    href: "/apps/app/user_mgmt",
+  },
 ];
 
 const AppsSelect = () => {

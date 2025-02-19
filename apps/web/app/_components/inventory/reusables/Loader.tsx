@@ -1,9 +1,19 @@
+import { cn } from "@repo/ui/lib/utils";
 import { Loader2 } from "lucide-react";
 import React from "react";
 
-const Loader = () => {
+interface LoaderProps {
+  color?: string;
+}
+
+const Loader = ({ color }: LoaderProps) => {
   return (
-    <Loader2 className="justify-center h-full mx-auto animate-spin text-3xl text-white items-center" />
+    <Loader2
+      className={cn(
+        "justify-center h-full mx-auto animate-spin text-3xl text-white items-center",
+        `text-${color}`
+      )}
+    />
   );
 };
 

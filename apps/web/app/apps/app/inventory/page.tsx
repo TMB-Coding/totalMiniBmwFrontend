@@ -5,6 +5,7 @@ import Home from "../../../_components/inventory/home/Home";
 import CreateTool from "../../../_components/inventory/create/CreateTool";
 import AccessControl from "../../../_components/inventory/access_control/AccessControl";
 import EditTool from "../../../_components/inventory/edit/EditTool";
+import { ViewAssets } from "../../../_components/inventory/home/table/ViewAssets";
 
 const Inventory = () => {
   const router = useRouter();
@@ -27,6 +28,7 @@ const Inventory = () => {
 
       {view && view == "create" && <CreateTool />}
       {view && view == "edit" && <EditTool />}
+      <ViewAssets />
     </div>
   );
 };

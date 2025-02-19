@@ -115,6 +115,15 @@ export const columns: ColumnDef<Tool>[] = [
             >
               Edit Tool
             </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                router.push(
+                  `/apps/app/inventory?view=home&assets=true&toolId=${tool.id}`
+                )
+              }
+            >
+              View Assets
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

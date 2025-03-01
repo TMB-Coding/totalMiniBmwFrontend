@@ -4,13 +4,10 @@ import { DataTable } from "./table/DataTable";
 import { columns } from "./table/Columns";
 import { useCookies } from "next-client-cookies";
 import { Tool } from "../../../../types/ToolModel";
-import { useToast } from "@repo/ui/hooks/use-toast";
-import { CircleAlertIcon, Loader2 } from "lucide-react";
 import InsufficientAuthorities from "../../error_views/InsufficientAuthorities";
 import Loader from "../reusables/Loader";
 const InventoryHome = () => {
   const cookies = useCookies();
-  const { toast } = useToast();
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 

@@ -63,6 +63,7 @@ const LoginPage = () => {
     setWaiting(false);
 
     if (req.status != 200) {
+      setWaiting(false);
       return toast({
         variant: "destructive",
         title: res.title,

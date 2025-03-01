@@ -32,6 +32,7 @@ const KioskLoginPage = () => {
   const [waiting, setWaiting] = useState<boolean>(false);
   const { toast } = useToast();
   const router = useRouter();
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,9 +43,7 @@ const KioskLoginPage = () => {
   });
 
   useEffect(() => {
-    if (cookies.get("jwt")) {
-      window.location.href = "/apps";
-    }
+    inputRef.current?.focus();
   }, []);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -96,7 +95,12 @@ const KioskLoginPage = () => {
                   <FormItem>
                     <FormLabel>Employee Number</FormLabel>
                     <FormControl>
-                      <Input placeholder="9999" {...field} type="number" />
+                      <Input
+                        placeholder="9999"
+                        {...field}
+                        type="number"
+                        ref={inputRef}
+                      />
                     </FormControl>
 
                     <FormMessage />

@@ -34,10 +34,10 @@ const apps: Array<App> = [
 const AppsSelect = () => {
   return (
     <div className="flex min-h-screen w-full flex-col items-center justify-center bg-black">
-      <h1 className="mx-auto my-1 items-center text-2xl font-semibold text-white">
-        Total Mini & BMW
+      <h1 className="mx-auto my-1 items-center text-md font-thin text-white">
+        Total MINI & BMW
       </h1>
-      <h1 className="mx-auto mb-10 items-center text-xl font-semibold text-white/20">
+      <h1 className="mx-auto mb-10 items-center text-2xl font-semibold text-white">
         Apps Self Service
       </h1>
       <div className="flex flex-col justify-around gap-3">

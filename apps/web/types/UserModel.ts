@@ -1,4 +1,4 @@
-import { AuthorityModel } from "./Authority";
+import { Authority, AuthorityModel } from "./AuthorityModel";
 import { Tool } from "./ToolModel";
 
 interface UserModel {
@@ -7,8 +7,6 @@ interface UserModel {
   firstName: string;
   lastName: string;
   email: string;
-  kioskToken: string;
-  role: string;
   authorities: AuthorityModel[];
   promptToSetPw: boolean;
   checkedOut: Tool[];

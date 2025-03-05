@@ -96,6 +96,7 @@ const KioskLoginPage = () => {
                     <FormLabel>Employee Number</FormLabel>
                     <FormControl>
                       <Input
+                        inputMode="none"
                         placeholder="9999"
                         {...field}
                         type="number"
@@ -114,7 +115,12 @@ const KioskLoginPage = () => {
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="chad" {...field} type="text" />
+                      <Input
+                        placeholder="chad"
+                        {...field}
+                        type="text"
+                        inputMode="none"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

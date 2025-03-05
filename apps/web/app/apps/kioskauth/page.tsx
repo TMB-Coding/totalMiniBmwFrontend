@@ -20,7 +20,7 @@ import { useToast } from "@repo/ui/hooks/use-toast";
 import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  employeeNumber: z.string().min(4, {
+  employeeNumber: z.string().min(1, {
     message: "Input must be an employee number.",
   }),
   firstName: z.string().min(1, {
@@ -62,6 +62,8 @@ const KioskLoginPage = () => {
         }),
       }
     );
+    form.reset({ employeeNumber: "", firstName: "" });
+    form.clearErrors();
     const res = await req.json();
     setWaiting(false);
 

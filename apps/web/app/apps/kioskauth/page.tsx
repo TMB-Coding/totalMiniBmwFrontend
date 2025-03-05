@@ -64,6 +64,7 @@ const KioskLoginPage = () => {
     );
     form.reset({ employeeNumber: "", firstName: "" });
     form.clearErrors();
+    inputRef.current?.focus();
     const res = await req.json();
     setWaiting(false);
 

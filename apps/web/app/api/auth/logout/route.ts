@@ -1,14 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 // pages/api/hello.js
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const redirect = searchParams.get("redirect");
   const cookieStore = cookies();
 
   // call server to invalidate / logout token
 
-  await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/logout`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/auth/logout`, {
     method: "GET",
     headers: {
       Authorization: "Bearer " + (await cookieStore).get("jwt")?.value,

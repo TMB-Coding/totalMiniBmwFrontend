@@ -16,17 +16,14 @@ const KioskHome = () => {
   }, []);
 
   const handleSubmitPress = async () => {
-    const req = await fetch(
-      `${process.env.NEXT_PUBLIC_SERVER_URL}/tool/kiosk`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${cookies.get("jwt")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ barcode: barcodeInputRef.current?.value }),
-      }
-    );
+    const req = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/kiosk`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${cookies.get("jwt")}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ barcode: barcodeInputRef.current?.value }),
+    });
     const res = await req.json();
     if (req.status != 200) {
       return toast({
